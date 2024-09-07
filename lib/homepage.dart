@@ -13,12 +13,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   //function get api
   Future getData() async {
-    String url = 'https://jsonplaceholder.typicode.com/users';
-    var response = await http.get(
-      Uri.parse(url),
-    );
-    // return json.decode(response.body);
-    print(response);
+    var url = Uri.parse('https://adipramanacomputer.com/apiphp/getdata.php');
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+      // print('Response data: ${response.body}'); //debugging flutter 
+    } else {
+      return jsonDecode(response.body);
+      // print('Error: ${response.statusCode}'); //debugging flutter
+    }
   }
 
   @override
@@ -69,34 +73,38 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class ItemList extends StatelessWidget {
-  final List<dynamic>? list; // Tipe data harus sesuai
+  final List<dynamic> list; // Sesuaikan tipe data
+
   ItemList({Key? key, required this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (list == null) {
+    if (list.isEmpty) {
       return Center(child: Text("No data available"));
     }
+
+    print('List data: $list'); // Debug print
+
     return ListView.builder(
-      itemCount: list!.length,
+      itemCount: list.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            // Implementation for navigation to DetailPage
-            
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) =>
-                    Detailpage(list: list!, index: list![index]),
+                builder: (context) => Detailpage(
+                  list: list,
+                  index: index,
+                ),
               ),
             );
           },
           child: Card(
             color: Colors.white,
             child: ListTile(
-              title: Text(list![index]['name']),
-              leading: Icon(Icons.widgets),
-              subtitle: Text('Email: ${list![index]['email']}'),
+              title: Text(list[index]['item_name'] ?? 'Nama tidak tersedia'),
+              subtitle: Text(
+                  'Email: ${list[index]['item_code'] ?? 'Email tidak tersedia'}'),
             ),
           ),
         );
