@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'detailpage.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -17,8 +17,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var response = await http.get(
       Uri.parse(url),
     );
-    return json.decode(response.body);
-    // print(response);
+    // return json.decode(response.body);
+    print(response);
   }
 
   @override
@@ -30,20 +30,26 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('HomePage', style: TextStyle(color: Colors.white),),
+        title: Text(
+          'HomePage',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.red,
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.red,
         onPressed: () {
           // Navigator.of(context).push(
           //   MaterialPageRoute(
-          //     builder: (context) => AddPage(),
+          //     builder: (context) => Detailpage(),
           //   ),
           // );
         },
         child: Icon(
           Icons.add,
+          color: Colors.white,
         ),
       ),
       body: FutureBuilder(
@@ -64,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class ItemList extends StatelessWidget {
   final List<dynamic>? list; // Tipe data harus sesuai
-  ItemList({Key? key, this.list}) : super(key: key);
+  ItemList({Key? key, required this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +83,16 @@ class ItemList extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             // Implementation for navigation to DetailPage
+            
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    Detailpage(list: list!, index: list![index]),
+              ),
+            );
           },
           child: Card(
+            color: Colors.white,
             child: ListTile(
               title: Text(list![index]['name']),
               leading: Icon(Icons.widgets),
